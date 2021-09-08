@@ -54,5 +54,5 @@ jobs:
       - name: Run tox targets for ${{ matrix.python-version }}
         # could do this if we install tox-py, but it doesn't support 2.7 or 3.4
         #   run: tox --py current
-        # sed is used to remove the '.' so '3.7' becomes 'py37' for tox
-        run: tox -e `echo py${{ matrix.python-version }} | sed s/\\\.//`
+        # sed is used to remove the '.' so '3.7' becomes '37' for tox (and pypy3 doesn't become pypypy3)
+        run: tox -e py`echo ${{ matrix.python-version }} | sed s/\\\.// | sed s/pypy/py/`
