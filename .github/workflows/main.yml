@@ -60,19 +60,17 @@ jobs:
       - name: Make lcov file
         run: coverage-lcov
 
-      - name: Coveralls Parallel
-        uses: coverallsapp/github-action@master
+      - name: Coveralls
+        uses: AndreMiras/coveralls-python-action@develop
         with:
-          github-token: ${{ secrets.github_token }}
-          flag-name: run-${{ matrix.python-version }}
           parallel: true
+          flag-name: test coverage ${{ matrix.python-version }}
 
-  finish:
+  coveralls_finish:
     needs: tests
     runs-on: ubuntu-latest
     steps:
     - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
+      uses: AndreMiras/coveralls-python-action@develop
       with:
-        github-token: ${{ secrets.github_token }}
         parallel-finished: true
