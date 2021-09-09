@@ -1,8 +1,6 @@
 Ming
 ====
 
-[![CI]()](https://github.com/brondsem/Ming/actions/workflows/main.yml)
-
 .. image:: https://github.com/TurboGears/Ming/actions/workflows/main.yml/badge.svg
     :target: https://github.com/TurboGears/Ming/actions/workflows/main.yml
 
