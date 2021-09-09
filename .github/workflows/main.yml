@@ -57,12 +57,14 @@ jobs:
         # sed is used to remove the '.' so '3.7' becomes '37' for tox (and pypy3 doesn't become pypypy3)
         run: tox -e py`echo ${{ matrix.python-version }} | sed s/\\\.// | sed s/pypy/py/`
 
+      # https://coveralls-python.readthedocs.io/en/latest/usage/configuration.html#github-actions-support
       - name: Upload coverage data to coveralls.io
-        run: coveralls --service=github-actions
+        run: coveralls --service=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
           COVERALLS_PARALLEL: true
+          COVERALLS_SERVICE_NAME: github
 
   coveralls:
     name: Indicate completion to coveralls.io
@@ -73,6 +75,7 @@ jobs:
     - name: Finished
       run: |
         pip3 install --upgrade coveralls
-        coveralls --service=github-actions --finish
+        coveralls --service=github --finish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_SERVICE_NAME: github
