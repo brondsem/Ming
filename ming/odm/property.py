@@ -29,8 +29,31 @@ class ORMProperty:
         return '<{} {}>'.format(
             self.__class__.__name__, self.name)
 
-class DecryptedProperty(ming.encryption.DecryptedField):
-    pass
+class DecryptedProperty(ming.encryption.DecryptedField, ORMProperty):
+    include_in_repr = False
+
+    def __init__(self, field_type, encrypted_field: str | None = None):
+        ORMProperty.__init__(self)
+        ming.encryption.DecryptedField.__init__(self, field_type, encrypted_field)
+
+        if isinstance(field_type, Field):
+            self.field = field_type
+        else:
+            self.field = Field(field_type)#, *args, **kwargs)
+
+    def __get__(self, instance, owner):
+        val = ming.encryption.DecryptedField.__get__(self, instance, owner)
+        if val is None:
+            # fallback to non-encrypted
+            # TODO limit to certain fields or config setting?
+            # TODO copy more logic from FieldProperty.__get__, like defaults
+            from ming.odm import state
+
+            st = state(instance)
+            return st.document[self.name]
+
+        return val
+
 
 class FieldProperty(ORMProperty):
     """Declares property for a value stored in a MongoDB Document.
